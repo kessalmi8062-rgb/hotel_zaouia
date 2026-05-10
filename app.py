@@ -1,79 +1,78 @@
 from flask import Flask, render_template, request, jsonify
-import pymysql
+import sqlite3
+import os
 from datetime import datetime
 import traceback
 
-app = Flask(__name__)
+app = Flask(_name_)
 
-# ==================== إعداد اتصال قاعدة البيانات ====================
+# ==================== إعداد اتصال قاعدة البيانات SQLite ====================
+DATABASE = 'hotel_zaouia.db'
+
 def get_db_connection():
-    """إنشاء اتصال بقاعدة البيانات"""
-    return pymysql.connect(
-        host='localhost',
-        user='root',
-        password='',  # اتركها فارغة في XAMPP، أو ضع كلمة المرور الخاصة بك
-        database='hotel_zaouia',
-        cursorclass=pymysql.cursors.DictCursor,
-        charset='utf8mb4'
-    )
+    """إنشاء اتصال بقاعدة البيانات SQLite"""
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row  # للتعامل مع النتائج كقاموس
+    return conn
 
 # ==================== إنشاء الجداول ====================
 def create_tables():
     """إنشاء الجداول إذا لم تكن موجودة"""
-    connection = get_db_connection()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
     try:
-        with connection.cursor() as cursor:
-            # جدول حجوزات الإقامة
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS reservations_sejour (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    type_chambre VARCHAR(50) NOT NULL,
-                    nombre_chambres INT NOT NULL,
-                    adultes INT NOT NULL,
-                    enfants INT NOT NULL,
-                    date_arrivee DATE NOT NULL,
-                    date_depart DATE NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-            
-            # جدول حجوزات المطعم
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS reservations_table (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    restaurant VARCHAR(50) NOT NULL,
-                    nom_complet VARCHAR(100) NOT NULL,
-                    email VARCHAR(100) NOT NULL,
-                    telephone VARCHAR(20),
-                    date_reservation DATE NOT NULL,
-                    nombre_personnes INT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-            
-            # جدول حجوزات الفعاليات
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS reservations_evenement (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    type_evenement VARCHAR(50) NOT NULL,
-                    nom VARCHAR(50) NOT NULL,
-                    prenom VARCHAR(50) NOT NULL,
-                    email VARCHAR(100) NOT NULL,
-                    pays VARCHAR(50) NOT NULL,
-                    ville VARCHAR(50) NOT NULL,
-                    societe VARCHAR(100) NOT NULL,
-                    telephone VARCHAR(20) NOT NULL,
-                    commentaires TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-            
-        connection.commit()
+        # جدول حجوزات الإقامة
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS reservations_sejour (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                type_chambre TEXT NOT NULL,
+                nombre_chambres INTEGER NOT NULL,
+                adultes INTEGER NOT NULL,
+                enfants INTEGER NOT NULL,
+                date_arrivee TEXT NOT NULL,
+                date_depart TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # جدول حجوزات المطعم
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS reservations_table (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                restaurant TEXT NOT NULL,
+                nom_complet TEXT NOT NULL,
+                email TEXT NOT NULL,
+                telephone TEXT,
+                date_reservation TEXT NOT NULL,
+                nombre_personnes INTEGER NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # جدول حجوزات الفعاليات
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS reservations_evenement (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                type_evenement TEXT NOT NULL,
+                nom TEXT NOT NULL,
+                prenom TEXT NOT NULL,
+                email TEXT NOT NULL,
+                pays TEXT NOT NULL,
+                ville TEXT NOT NULL,
+                societe TEXT NOT NULL,
+                telephone TEXT NOT NULL,
+                commentaires TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        conn.commit()
         print("✓ الجداول تم إنشاؤها بنجاح (أو موجودة مسبقاً)")
     except Exception as e:
         print(f"✗ خطأ في إنشاء الجداول: {e}")
     finally:
-        connection.close()
+        conn.close()
 
 # ==================== الصفحة الرئيسية ====================
 @app.route('/')
@@ -96,29 +95,29 @@ def reserver_sejour():
                 return jsonify({"success": False, "message": f"الحقل {field} مطلوب"}), 400
         
         # حفظ في قاعدة البيانات
-        connection = get_db_connection()
-        try:
-            with connection.cursor() as cursor:
-                sql = """
-                    INSERT INTO reservations_sejour 
-                    (type_chambre, nombre_chambres, adultes, enfants, date_arrivee, date_depart)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """
-                cursor.execute(sql, (
-                    data['type_chambre'],
-                    data['nombre_chambres'],
-                    data['adultes'],
-                    data['enfants'],
-                    data['date_arrivee'],
-                    data['date_depart']
-                ))
-            connection.commit()
-            return jsonify({
-                "success": True, 
-                "message": f"تم حجز {data['nombre_chambres']} غرفة من نوع {data['type_chambre']} بتاريخ {data['date_arrivee']} إلى {data['date_depart']}"
-            })
-        finally:
-            connection.close()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            INSERT INTO reservations_sejour 
+            (type_chambre, nombre_chambres, adultes, enfants, date_arrivee, date_depart)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            data['type_chambre'],
+            data['nombre_chambres'],
+            data['adultes'],
+            data['enfants'],
+            data['date_arrivee'],
+            data['date_depart']
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "success": True, 
+            "message": f"تم حجز {data['nombre_chambres']} غرفة من نوع {data['type_chambre']} بتاريخ {data['date_arrivee']} إلى {data['date_depart']}"
+        })
             
     except Exception as e:
         print("خطأ:", traceback.format_exc())
@@ -137,29 +136,29 @@ def reserver_table():
             if field not in data:
                 return jsonify({"success": False, "message": f"الحقل {field} مطلوب"}), 400
         
-        connection = get_db_connection()
-        try:
-            with connection.cursor() as cursor:
-                sql = """
-                    INSERT INTO reservations_table 
-                    (restaurant, nom_complet, email, telephone, date_reservation, nombre_personnes)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """
-                cursor.execute(sql, (
-                    data['restaurant'],
-                    data['nom_complet'],
-                    data['email'],
-                    data.get('telephone', ''),
-                    data['date_reservation'],
-                    data['nombre_personnes']
-                ))
-            connection.commit()
-            return jsonify({
-                "success": True,
-                "message": f"تم حجز طاولة في مطعم {data['restaurant']} لـ {data['nombre_personnes']} أشخاص بتاريخ {data['date_reservation']}"
-            })
-        finally:
-            connection.close()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            INSERT INTO reservations_table 
+            (restaurant, nom_complet, email, telephone, date_reservation, nombre_personnes)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            data['restaurant'],
+            data['nom_complet'],
+            data['email'],
+            data.get('telephone', ''),
+            data['date_reservation'],
+            data['nombre_personnes']
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "success": True,
+            "message": f"تم حجز طاولة في مطعم {data['restaurant']} لـ {data['nombre_personnes']} أشخاص بتاريخ {data['date_reservation']}"
+        })
             
     except Exception as e:
         print("خطأ:", traceback.format_exc())
@@ -178,32 +177,32 @@ def reserver_evenement():
             if field not in data:
                 return jsonify({"success": False, "message": f"الحقل {field} مطلوب"}), 400
         
-        connection = get_db_connection()
-        try:
-            with connection.cursor() as cursor:
-                sql = """
-                    INSERT INTO reservations_evenement 
-                    (type_evenement, nom, prenom, email, pays, ville, societe, telephone, commentaires)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-                cursor.execute(sql, (
-                    data['type_evenement'],
-                    data['nom'],
-                    data['prenom'],
-                    data['email'],
-                    data['pays'],
-                    data['ville'],
-                    data['societe'],
-                    data['telephone'],
-                    data['commentaires']
-                ))
-            connection.commit()
-            return jsonify({
-                "success": True,
-                "message": f"تم استلام طلب فعالية {data['type_evenement']} من {data['prenom']} {data['nom']}. سنتواصل معكم قريباً."
-            })
-        finally:
-            connection.close()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            INSERT INTO reservations_evenement 
+            (type_evenement, nom, prenom, email, pays, ville, societe, telephone, commentaires)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            data['type_evenement'],
+            data['nom'],
+            data['prenom'],
+            data['email'],
+            data['pays'],
+            data['ville'],
+            data['societe'],
+            data['telephone'],
+            data['commentaires']
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "success": True,
+            "message": f"تم استلام طلب فعالية {data['type_evenement']} من {data['prenom']} {data['nom']}. سنتواصل معكم قريباً."
+        })
             
     except Exception as e:
         print("خطأ:", traceback.format_exc())
@@ -214,34 +213,34 @@ def reserver_evenement():
 def get_statistiques():
     """الحصول على إحصائيات الحجوزات"""
     try:
-        connection = get_db_connection()
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT COUNT(*) as count FROM reservations_sejour")
-                sejour_count = cursor.fetchone()['count']
-                
-                cursor.execute("SELECT COUNT(*) as count FROM reservations_table")
-                table_count = cursor.fetchone()['count']
-                
-                cursor.execute("SELECT COUNT(*) as count FROM reservations_evenement")
-                evenement_count = cursor.fetchone()['count']
-                
-            return jsonify({
-                "success": True,
-                "data": {
-                    "sejour": sejour_count,
-                    "table": table_count,
-                    "evenement": evenement_count,
-                    "total": sejour_count + table_count + evenement_count
-                }
-            })
-        finally:
-            connection.close()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT COUNT(*) as count FROM reservations_sejour")
+        sejour_count = cursor.fetchone()['count']
+        
+        cursor.execute("SELECT COUNT(*) as count FROM reservations_table")
+        table_count = cursor.fetchone()['count']
+        
+        cursor.execute("SELECT COUNT(*) as count FROM reservations_evenement")
+        evenement_count = cursor.fetchone()['count']
+        
+        conn.close()
+        
+        return jsonify({
+            "success": True,
+            "data": {
+                "sejour": sejour_count,
+                "table": table_count,
+                "evenement": evenement_count,
+                "total": sejour_count + table_count + evenement_count
+            }
+        })
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
 # ==================== تشغيل التطبيق ====================
-if __name__ == '__main__':
+if _name_ == '_main_':
     # إنشاء الجداول عند بدء التشغيل
     print("=== فندق الزاوية - نظام الحجوزات ===")
     print("جاري تجهيز قاعدة البيانات...")
