@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Hôtel Zaouia | El Kelaâ des Sraghna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf7f2;
+            color: #2c2418;
+        }
+
+        h1, h2, h3, .logo {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 250, 240, 0.97);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(200, 170, 110, 0.3);
+            padding: 15px 0;
+        }
+
+        /* [احتفظ بجميع الـ CSS الذي لديك هنا] */
+        
+        /* أضف هذا القسم لتحسين الأزرار */
+        .choice-card, .resto-btn, .back-to-choices, .btn-submit, .nav-link, .footer-reserve-items span, .footer-links a {
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* إضافة fallback للصور */
+        .card-img {
+            background-color: #f0e6d6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%238B5A2B" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 50px;
+        }
+
+
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #8B5A2B;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #B8860B;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* BOUTON HAMBURGER (Trois lignes) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background-color: #8B5A2B;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* MENU DESKTOP */
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a3724;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #C49A6C;
+        }
+
+        /* SECTIONS */
+        .page-section {
+            display: none;
+            padding: 120px 0 60px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+       
+        /* HERO ACCUEIL */
+        .hero-accueil {
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.35)), url('https://i.postimg.cc/Fs82Pxvk/Whats-App-Image-2026-05-08-at-18-00-43-(2).jpg');
+            background-size: cover;
+            background-position: center 30%;
+            border-radius: 30px;
+            padding: 100px 40px;
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .hero-accueil h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+
+        .hero-accueil p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* لتعديل الصورة الثالثة في قسم Accueil */
+.cards-grid .card:nth-child(2) .card-img {
+    object-fit: cover;      /* أو contain إذا بغيتيها كاملة */
+    object-position: center 30%;
+    filter: brightness(0.9) contrast(1.05);
+    border-radius: 28px 28px 0 0;
+}
+
+        .section-title {
+            text-align: center;
+            font-size: 2.3rem;
+            margin: 40px 0 20px;
+            color: #6B3A1F;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #A27B5C;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        /* CARTES */
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 35px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            width: 320px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 22px;
+        }
+
+        .card-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #5C3A21;
+        }
+
+        .card-content p {
+            color: #7A6248;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* FORMULAIRE RESERVATION */
+   
+.reservation-choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 50px 0;
+}
+
+.choice-card {
+    background: white;
+    border-radius: 28px;
+    padding: 40px 30px;
+    width: 250px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E2CFB5;
+}
+
+.choice-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    border-color: #C49A6C;
+}
+
+.choice-card h3 {
+    font-size: 1.6rem;
+    color: #5C3A21;
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+}
+
+.choice-card p {
+    color: #7A6248;
+    font-size: 0.85rem;
+}
+
+.sub-page {
+    display: none;
+}
+
+.sub-page.active-sub {
+    display: block;
+}
+
+.back-to-choices {
+    background: transparent;
+    border: 1px solid #C49A6C;
+    color: #8B5A2B;
+    padding: 10px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.back-to-choices:hover {
+    background: #C49A6C;
+    color: white;
+}
+
+.sub-reservation-container {
+    background: white;
+    border-radius: 40px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sub-reservation-container h3 {
+    color: #5C3A21;
+    text-align: center;
+    margin-bottom: 25px;
+    font-family: 'Playfair Display', serif;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #5C3A21;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #E2CFB5;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.form-group textarea {
+    border-radius: 25px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.person-counter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.counter-item {
+    flex: 1;
+    text-align: center;
+}
+
+.counter-item button {
+    background: #E2CFB5;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.counter-item button:hover {
+    background: #C49A6C;
+    color: white;
+}
+
+.counter-item span {
+    margin: 0 15px;
+    font-size: 1.2rem;
+}
+
+.btn-submit {
+    background: #C49A6C;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #A67B4A;
+}
+
+.info-note {
+    font-size: 0.75rem;
+    color: #8A7A62;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.restaurant-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.resto-btn {
+    background: #EFE6DA;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.resto-btn:hover {
+    background: #C49A6C;
+    color: white;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+    .reservation-choices {
+        gap: 15px;
+    }
+    .choice-card {
+        width: 180px;
+        padding: 25px 15px;
+    }
+    .choice-card h3 {
+        font-size: 1.2rem;
+    }
+    .sub-reservation-container {
+        padding: 25px;
+    }
+}
+
+
+
+/* ========== FOOTER (STYLE MAMOUNIA, COLONNE UNIQUE) ========== */
+footer {
+    background: #1A1511;
+    color: #D4C5B0;
+    margin-top: 70px;
+    padding: 50px 0 35px;
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Première partie (HÉBERGEMENTS à EVÈNEMENTS) - COLONNE UNIQUE VERTICALE */
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(212, 197, 176, 0.2);
+    margin-bottom: 30px;
+}
+
+.footer-links a {
+    color: #D4C5B0;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #E6D5B8;
+}
+
+/* Deuxième partie (RÉSERVER VOTRE :) */
+.footer-reserve {
+    text-align: center;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(212, 197, 176, 0.2);
+    margin-bottom: 30px;
+}
+
+.footer-reserve h4 {
+    color: #E6D5B8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+}
+
+.footer-reserve-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.footer-reserve-items span {
+    color: #B8A88A;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.footer-reserve-items span:hover {
+    color: #E6D5B8;
+}
+
+/* Troisième partie (LEADING HOTELS + infos) - DEUX COLONNES */
+.footer-bottom {
+    text-align: center;
+}
+
+.footer-leading {
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #C9B48B;
+    font-size: 0.7rem;
+    margin-bottom: 25px;
+}
+
+/* Liens en deux colonnes dans LEADING HOTELS */
+.footer-bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px 50px;
+    margin: 15px 0 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-bottom-links span {
+    font-size: 0.65rem;
+    color: #8A7A62;
+    cursor: pointer;
+    width: calc(50% - 25px);
+    min-width: 120px;
+    text-align: center;
+}
+
+.footer-bottom-links span:hover {
+    color: #C9B48B;
+}
+
+.footer-bottom p {
+    font-size: 0.65rem;
+    color: #8A7A62;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+        /* RESPONSIVE */
+        @media (max-width: 850px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                background: rgba(255, 250, 240, 0.98);
+                backdrop-filter: blur(12px);
+                flex-direction: column;
+                width: 70%;
+                max-width: 280px;
+                padding: 30px 25px;
+                border-radius: 25px 0 25px 25px;
+                box-shadow: -5px 10px 25px rgba(0,0,0,0.1);
+                transition: 0.3s ease;
+                gap: 25px;
+                border: 1px solid #E2CFB5;
+            }
+
+            .nav-links.active {
+                right: 20px;
+            }
+
+            .navbar {
+                padding: 0 25px;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .hero-accueil h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .card {
+                width: 100%;
+            }
+            .reservation-form {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>Hôtel Zaouia</h1>
+                <p>EL KELAÂ DES SRAGHNA</p>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a class="nav-link" data-page="accueil">Accueil</a></li>
+                <li><a class="nav-link" data-page="hebergements">Hébergements</a></li>
+                <li><a class="nav-link" data-page="restaurants">Restaurants</a></li>
+                <li><a class="nav-link" data-page="reserver">Réserver</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- PAGE ACCUEIL -->
+        <div id="accueil-page" class="page-section active">
+            <div class="container">
+                <div class="hero-accueil">
+                    <h2>مرحبًا بك في قلب أسطورتنا</h2>
+                    <p>فندق الزاوية… حيث يحكي كل حجر حكاية، وتروي كل ريحانة سرّاً</p>
+                    <p style="margin-top: 20px; font-style: italic;">عيش تجربة الزاوية، رحلة حسية</p>
+                </div>
+                <h2 class="section-title">اكتشف تجربة الزاوية</h2>
+                <div class="cards-grid" id="accueil-highlights"></div>
+                <div style="text-align: center; margin: 50px 0;">
+                    <p style="color: #5C3A21; font-size: 1.1rem;">بين الحدائق الغناء، والنوافير الهادئة، والهندسة المعمارية العريقة، تصبح كل لحظة تحفة فنية</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE HÉBERGEMENTS -->
+        <div id="hebergements-page" class="page-section">
+            <div class="container">
+                <h2 class="section-title">Nos Hébergements d'Exception</h2>
+                <div class="section-sub">Un art de vivre marocain, entre authenticité et raffinement</div>
+                <div class="cards-grid" id="hebergements-list"></div>
+            </div>
+        </div>
+
+        <!-- PAGE RESTAURANTS -->
+        <div id="restaurants-page" class="page-section">
+            <div class="container">
+                <h2 class="section-title">Restaurants & Saveurs du Monde</h2>
+                <div class="section-sub">Une palette exquise : traditions marocaine, italienne, espagnole et asiatique</div>
+                <div class="cards-grid" id="restaurants-list"></div>
+            </div>
+        </div>
+
+        <!-- PAGE RÉSERVER -->
+
+
+
+<div id="reserver-page" class="page-section">
+    <div class="container">
+        <h2 class="section-title">Réserver</h2>
+        <div class="section-sub">Choisissez le type de réservation</div>
+
+        <!-- بطاقات الاختيارات الرئيسية -->
+        <div id="reservation-choices" class="reservation-choices">
+            <div class="choice-card" data-choice="sejour">
+                <h3>SÉJOUR</h3>
+                <p>Réservez votre chambre ou suite</p>
+            </div>
+            <div class="choice-card" data-choice="table">
+                <h3>TABLE</h3>
+                <p>Réservez votre restaurant</p>
+            </div>
+            <div class="choice-card" data-choice="evenement">
+                <h3>ÉVÈNEMENT</h3>
+                <p>Organisez votre événement</p>
+            </div>
+        </div>
+
+        <!-- نموذج حجز الإقامة (SÉJOUR) -->
+        <div id="sejour-sub" class="sub-page">
+            <button class="back-to-choices" onclick="showReservationChoices()">← Retour aux choix</button>
+            <div class="sub-reservation-container">
+                <h3>Réserver votre séjour</h3>
+                
+                <div class="form-group">
+                    <label>Type de chambre</label>
+                    <select id="type-chambre">
+                        <option value="Standard">Standard</option>
+                        <option value="Deluxe">Deluxe</option>
+                        <option value="Suite Junior">Suite Junior</option>
+                        <option value="Suite Royale">Suite Royale</option>
+                        <option value="Riad Privatif">Riad Privatif</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nombre de chambres</label>
+                    <div class="person-counter">
+                        <div class="counter-item">
+                            <button onclick="changeValue('chambres', -1)">-</button>
+                            <span id="chambres-count">1</span>
+                            <button onclick="changeValue('chambres', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Adultes (13 ans et plus)</label>
+                    <div class="person-counter">
+                        <div class="counter-item">
+                            <button onclick="changeValue('adultes', -1)">-</button>
+                            <span id="adultes-count">2</span>
+                            <button onclick="changeValue('adultes', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Enfants (0 à 12 ans)</label>
+                    <div class="person-counter">
+                        <div class="counter-item">
+                            <button onclick="changeValue('enfants', -1)">-</button>
+                            <span id="enfants-count">0</span>
+                            <button onclick="changeValue('enfants', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date d'arrivée</label>
+                    <input type="date" id="date-arrivee">
+                </div>
+                
+                <div class="form-group">
+                    <label>Date de départ</label>
+                    <input type="date" id="date-depart">
+                </div>
+                
+                <button class="btn-submit" onclick="submitSejour()">Suivant</button>
+                <p class="info-note">Sélectionner vos dates de séjour et le nombre de personnes</p>
+            </div>
+        </div>
+
+        <!-- نموذج حجز المطعم (TABLE) -->
+        <div id="table-sub" class="sub-page">
+            <button class="back-to-choices" onclick="showReservationChoices()">← Retour aux choix</button>
+            <div class="sub-reservation-container">
+                <h3>Réserver votre table</h3>
+                <p style="text-align: center; font-size: 0.85rem; margin-bottom: 20px;">
+                    Pour toute réservation le jour même, merci de nous contacter directement par téléphone au 
+                    <strong>+212 524 39 10 20</strong> ou par email à <strong>restaurants@hotelzaouia.ma</strong>
+                </p>
+                
+                <div class="restaurant-buttons">
+                    <button class="resto-btn" onclick="selectRestaurant('Marocain')">LE MAROCAIN</button>
+                    <button class="resto-btn" onclick="selectRestaurant('Italien')">L'ITALIEN</button>
+                    <button class="resto-btn" onclick="selectRestaurant('Asiatique')">L'ASIAIQUE</button>
+                    <button class="resto-btn" onclick="selectRestaurant('Piscine')">PAVILLON DE LA PISCINE</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nom complet *</label>
+                    <input type="text" id="table-nom" placeholder="Votre nom et prénom">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="table-email" placeholder="votre@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="tel" id="table-tel" placeholder="+212 XXXXXXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="table-date">
+                </div>
+                
+                <div class="form-group">
+                    <label>Nombre de personnes</label>
+                    <input type="number" id="table-personnes" value="2" min="1" max="50">
+                </div>
+                
+                <button class="btn-submit" onclick="submitTable()">Réserver la table</button>
+            </div>
+        </div>
+
+        <!-- نموذج حجز الفعاليات (ÉVÈNEMENT) -->
+        <div id="evenement-sub" class="sub-page">
+            <button class="back-to-choices" onclick="showReservationChoices()">← Retour aux choix</button>
+            <div class="sub-reservation-container">
+                <h3>Réserver votre événement</h3>
+                <p style="text-align: center; margin-bottom: 20px;">Veuillez remplir ce formulaire pour nous faire une demande de réservation</p>
+                
+                <div class="form-group">
+                    <label>Type d'événement *</label>
+                    <select id="event-type">
+                        <option value="Mariage">Mariage</option>
+                        <option value="Anniversaire">Anniversaire</option>
+                        <option value="Séminaire">Séminaire</option>
+                        <option value="Privé">Dîner privé</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nom *</label>
+                    <input type="text" id="event-nom">
+                </div>
+                
+                <div class="form-group">
+                    <label>Prénom *</label>
+                    <input type="text" id="event-prenom">
+                </div>
+                
+                <div class="form-group">
+                    <label>E-mail *</label>
+                    <input type="email" id="event-email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirmer l'e-mail *</label>
+                    <input type="email" id="event-email-confirm">
+                </div>
+                
+                <div class="form-group">
+                    <label>Pays *</label>
+                    <input type="text" id="event-pays" placeholder="Maroc">
+                </div>
+                
+                <div class="form-group">
+                    <label>Ville *</label>
+                    <input type="text" id="event-ville">
+                </div>
+                
+                <div class="form-group">
+                    <label>Société *</label>
+                    <input type="text" id="event-societe">
+                </div>
+                
+                <div class="form-group">
+                    <label>Téléphone *</label>
+                    <input type="tel" id="event-tel">
+                </div>
+                
+                <div class="form-group">
+                    <label>Commentaires *</label>
+                    <textarea id="event-commentaires" placeholder="Décrivez votre événement..."></textarea>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="event-accept">
+                    <label style="margin: 0;">J'ai lu et j'accepte les mentions légales</label>
+                </div>
+                
+                <button class="btn-submit" onclick="submitEvenement()">Envoyer la demande</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+   <footer>
+        <div class="footer-container">
+            <!-- Première section: tous les liens horizontaux mais organisés en colonne unique visuellement -->
+            <div class="footer-links">
+                <a href="#">HÉBERGEMENTS</a>
+                <a href="#">RESTAURANTS</a>
+                <a href="#">SALONS DE THÉ</a>
+                <a href="#">EVÈNEMENTS</a>
+                <a href="#">OFFRES SPÉCIALES</a>
+            </div>
+
+            <!-- Deuxième section: RÉSERVER VOTRE -->
+            <div class="footer-reserve">
+                <h4>RÉSERVER VOTRE :</h4>
+                <div class="footer-reserve-items">
+                    <span>SÉJOUR</span>
+                    <span>TABLE</span>
+                    <span>ÉVÈNEMENT</span>
+                </div>
+            </div>
+
+            <!-- Troisième section: LEADING HOTELS + infos légales -->
+            <div class="footer-bottom">
+                <div class="footer-leading">LEADING HOTELS®</div>
+                <p>Depuis 1923</p>
+                <div class="footer-bottom-links">
+                    <span>Le Magazine</span>
+                    <span>Respect de la vie privée</span>
+                    <span>Mentions légales</span>
+                    <span>Confidentialité</span>
+                    <span>Gestion des cookies</span>
+                </div>
+                <div class="footer-bottom-links">
+                    <span>Galerie vidéos</span>
+                    <span>Galerie photos</span>
+                    <span>Carrières</span>
+                </div>
+                <div class="footer-bottom-links">
+                    <span>Contact</span>
+                    <span>FAQ</span>
+                    <span>Leaders Club</span>
+                </div>
+                <p style="margin-top: 25px;">&copy; 2025 Hôtel Zaouia – El Kelaâ des Sraghna</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Donnees des hebergements (Suites, Chambres, Riads)
+        var hebergementsData = [
+            { name: "Suite Royale", desc: "Vue panoramique sur les jardins, salon prive, marbre et zellige.", img: "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Suite Princiere", desc: "Espace genereux de 90m², terrasse privative et prestations VIP.", img: "https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Chambre Deluxe", desc: "Elegance contemporaine avec touches marocaines, lit king size.", img: "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Riad Privatif", desc: "Veritable maison marocaine avec patio, fontaine et cheminee.", img: "https://images.pexels.com/photos/8021740/pexels-photo-8021740.jpeg?auto=compress&cs=tinysrgb&w=600" }
+        ];
+
+        // Donnees des restaurants (Marocaine, Italienne, Espagnole, Asiatique)
+        var restaurantsData = [
+            { name: "Restaurant Marocain", desc: "Tajines, couscous, pastillas par le Chef Rachid Agouray.", img: "https://images.pexels.com/photos/1850600/pexels-photo-1850600.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Trattoria Italiana", desc: "Pates fraiches, risotto, truffe blanche et pizzas au feu de bois.", img: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Tapas & Espana", desc: "Specialites espagnoles: paella, jambon iberique, tapas creatives.", img: "https://images.pexels.com/photos/2608040/pexels-photo-2608040.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "L'Asiatique", desc: "Saveurs thai, japonaises et chinoises, sushi bar et wok.", img: "https://images.pexels.com/photos/262959/pexels-photo-262959.jpeg?auto=compress&cs=tinysrgb&w=600" }
+        ];
+
+        // Donnees pour la page Accueil (mise en avant)
+        var accueilHighlights = [
+            { name: "شرفات الغرف", desc: "شرف أنيقة بإطلالة راقية  تجمع بين الفخامة و الهدوء في أجواء عصرية مميزة " ,img: "https://i.postimg.cc/43kR3QFm/Whats-App-Image-2026-05-08-at-18-00-43-(1).jpg" },
+            { name: "ساحة هادئة بلمسة مغربية", desc: "باحة خارجية واسعة بتصميم مغربي تقليدي، تتوسطها نافورة أنيقة وتحيط بها أشجار النخيل في أجواء هادئة ومشرقة." ,img: "https://i.postimg.cc/7644Kn3y/Whats-App-Image-2026-05-08-at-18-00-43.jpg" }
+        ];
+
+        // Fonction pour afficher les cartes
+        function renderCards(containerId, items) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = "";
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = '<img class="card-img" src="' + item.img + '" alt="' + item.name + '" loading="lazy">' +
+                    '<div class="card-content">' +
+                    '<h3>' + item.name + '</h3>' +
+                    '<p>' + item.desc + '</p>' +
+                    '</div>';
+                container.appendChild(card);
+            }
+        }
+
+        // Remplir toutes les sections
+        renderCards("hebergements-list", hebergementsData);
+        renderCards("restaurants-list", restaurantsData);
+        renderCards("accueil-highlights", accueilHighlights);
+
+        // Gestion du menu hamburger
+        var hamburger = document.getElementById("hamburger");
+        var navLinksMenu = document.getElementById("navLinks");
+        var navLinkItems = document.querySelectorAll(".nav-link");
+        var allPages = document.querySelectorAll(".page-section");
+
+        // Fonction pour afficher une page
+        function showPage(pageId) {
+            for (var i = 0; i < allPages.length; i++) {
+                allPages[i].classList.remove("active");
+            }
+            var activePage = document.getElementById(pageId + "-page");
+            if (activePage) {
+                activePage.classList.add("active");
+            }
+            if (navLinksMenu.classList.contains("active")) {
+                navLinksMenu.classList.remove("active");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // Ajouter les events sur les liens du menu
+        for (var j = 0; j < navLinkItems.length; j++) {
+            navLinkItems[j].addEventListener("click", function(e) {
+                e.preventDefault();
+                var page = this.getAttribute("data-page");
+                if (page) {
+                    showPage(page);
+                }
+            });
+        }
+
+        // Toggle hamburger menu
+        hamburger.addEventListener("click", function() {
+            navLinksMenu.classList.toggle("active");
+        });
+
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener("click", function(event) {
+            if (!hamburger.contains(event.target) && !navLinksMenu.contains(event.target)) {
+                navLinksMenu.classList.remove("active");
+            }
+        });
+
+
+// متغير لتخزين المطعم المختار
+var selectedResto = "";
+
+// إظهار خيارات الحجز الرئيسية
+function showReservationChoices() {
+    document.getElementById("sejour-sub").classList.remove("active-sub");
+    document.getElementById("table-sub").classList.remove("active-sub");
+    document.getElementById("evenement-sub").classList.remove("active-sub");
+    document.getElementById("reservation-choices").style.display = "flex";
+}
+
+// إظهار صفحة فرعية معينة
+function showSubPage(subPageId) {
+    document.getElementById("reservation-choices").style.display = "none";
+    document.getElementById("sejour-sub").classList.remove("active-sub");
+    document.getElementById("table-sub").classList.remove("active-sub");
+    document.getElementById("evenement-sub").classList.remove("active-sub");
+    document.getElementById(subPageId).classList.add("active-sub");
+}
+
+// تغيير قيم العدادات (للإقامة)
+function changeValue(id, delta) {
+    var span = document.getElementById(id + "-count");
+    var val = parseInt(span.innerText);
+    val = Math.max(0, val + delta);
+    if (id === "chambres" && val > 5) val = 5;
+    if (id === "adultes" && val > 10) val = 10;
+    if (id === "enfants" && val > 6) val = 6;
+    span.innerText = val;
+}
+
+// ==================== دوال جديدة للربط مع Python ====================
+
+// إرسال طلب حجز الإقامة إلى Python
+async function submitSejour() {
+    const typeChambre = document.getElementById("type-chambre").value;
+    const chambres = parseInt(document.getElementById("chambres-count").innerText);
+    const adultes = parseInt(document.getElementById("adultes-count").innerText);
+    const enfants = parseInt(document.getElementById("enfants-count").innerText);
+    const arrivee = document.getElementById("date-arrivee").value;
+    const depart = document.getElementById("date-depart").value;
+    
+    if (!arrivee || !depart) {
+        alert("Veuillez sélectionner vos dates de séjour.");
+        return;
+    }
+    
+    if (new Date(arrivee) >= new Date(depart)) {
+        alert("La date de départ doit être postérieure à la date d'arrivée.");
+        return;
+    }
+    
+    const data = {
+        type_chambre: typeChambre,
+        nombre_chambres: chambres,
+        adultes: adultes,
+        enfants: enfants,
+        date_arrivee: arrivee,
+        date_depart: depart
+    };
+    
+    try {
+        const response = await fetch('/api/reserver/sejour', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert("✓ " + result.message);
+            // تفريغ النموذج
+            document.getElementById("date-arrivee").value = "";
+            document.getElementById("date-depart").value = "";
+            document.getElementById("chambres-count").innerText = "1";
+            document.getElementById("adultes-count").innerText = "2";
+            document.getElementById("enfants-count").innerText = "0";
+        } else {
+            alert("✗ خطأ: " + result.message);
+        }
+    } catch (error) {
+        console.error("Erreur:", error);
+        alert("خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم (python app.py)");
+    }
+}
+
+// اختيار المطعم
+function selectRestaurant(resto) {
+    selectedResto = resto;
+    // إضافة تأثير بصري للزر المختار
+    document.querySelectorAll('.resto-btn').forEach(btn => {
+        btn.style.background = "#EFE6DA";
+        btn.style.color = "#2c2418";
+    });
+    event.target.style.background = "#C49A6C";
+    event.target.style.color = "white";
+}
+
+// إرسال طلب حجز المطعم إلى Python
+async function submitTable() {
+    const nom = document.getElementById("table-nom").value;
+    const email = document.getElementById("table-email").value;
+    const tel = document.getElementById("table-tel").value;
+    const date = document.getElementById("table-date").value;
+    const personnes = parseInt(document.getElementById("table-personnes").value);
+    
+    if (!nom || !email || !date) {
+        alert("Veuillez remplir tous les champs obligatoires (nom, email, date).");
+        return;
+    }
+    
+    if (!selectedResto) {
+        alert("Veuillez sélectionner un restaurant.");
+        return;
+    }
+    
+    const data = {
+        restaurant: selectedResto,
+        nom_complet: nom,
+        email: email,
+        telephone: tel || "",
+        date_reservation: date,
+        nombre_personnes: personnes
+    };
+    
+    try {
+        const response = await fetch('/api/reserver/table', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert("✓ " + result.message);
+            // تفريغ النموذج
+            document.getElementById("table-nom").value = "";
+            document.getElementById("table-email").value = "";
+            document.getElementById("table-tel").value = "";
+            document.getElementById("table-date").value = "";
+            document.getElementById("table-personnes").value = "2";
+            selectedResto = "";
+            document.querySelectorAll('.resto-btn').forEach(btn => {
+                btn.style.background = "#EFE6DA";
+                btn.style.color = "#2c2418";
+            });
+        } else {
+            alert("✗ خطأ: " + result.message);
+        }
+    } catch (error) {
+        console.error("Erreur:", error);
+        alert("خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم (python app.py)");
+    }
+}
+
+// إرسال طلب حجز الفعالية إلى Python
+async function submitEvenement() {
+    const nom = document.getElementById("event-nom").value;
+    const prenom = document.getElementById("event-prenom").value;
+    const email = document.getElementById("event-email").value;
+    const emailConfirm = document.getElementById("event-email-confirm").value;
+    const pays = document.getElementById("event-pays").value;
+    const ville = document.getElementById("event-ville").value;
+    const societe = document.getElementById("event-societe").value;
+    const tel = document.getElementById("event-tel").value;
+    const commentaires = document.getElementById("event-commentaires").value;
+    const accept = document.getElementById("event-accept").checked;
+    const typeEvenement = document.getElementById("event-type").value;
+    
+    if (!nom || !prenom || !email || !emailConfirm || !pays || !ville || !societe || !tel || !commentaires) {
+        alert("Veuillez remplir tous les champs obligatoires (*).");
+        return;
+    }
+    
+    if (email !== emailConfirm) {
+        alert("Les adresses email ne correspondent pas.");
+        return;
+    }
+    
+    if (!accept) {
+        alert("Veuillez accepter les mentions légales.");
+        return;
+    }
+    
+    const data = {
+        type_evenement: typeEvenement,
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        pays: pays,
+        ville: ville,
+        societe: societe,
+        telephone: tel,
+        commentaires: commentaires
+    };
+    
+    try {
+        const response = await fetch('/api/reserver/evenement', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert("✓ " + result.message);
+            // تفريغ النموذج
+            document.getElementById("event-nom").value = "";
+            document.getElementById("event-prenom").value = "";
+            document.getElementById("event-email").value = "";
+            document.getElementById("event-email-confirm").value = "";
+            document.getElementById("event-ville").value = "";
+            document.getElementById("event-tel").value = "";
+            document.getElementById("event-commentaires").value = "";
+            document.getElementById("event-accept").checked = false;
+        } else {
+            alert("✗ خطأ: " + result.message);
+        }
+    } catch (error) {
+        console.error("Erreur:", error);
+        alert("خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم (python app.py)");
+    }
+}
+
+// ربط الأحداث ببطاقات الاختيارات
+document.querySelectorAll(".choice-card").forEach(function(card) {
+    card.addEventListener("click", function() {
+        var choice = this.getAttribute("data-choice");
+        if (choice === "sejour") showSubPage("sejour-sub");
+        else if (choice === "table") showSubPage("table-sub");
+        else if (choice === "evenement") showSubPage("evenement-sub");
+    });
+});
+
+        // Page par defaut
+        if (!document.querySelector(".page-section.active")) {
+            showPage("accueil");
+        }
+
+
+    </script>
+</body>
+</html>
